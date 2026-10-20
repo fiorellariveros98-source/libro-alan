@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El cuento de un encuentro inesperado</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=UnifrakturCook:wght@700&display=swap');
+:root{--green:#142b20;--green2:#07170f;--gold:#c99a43;--gold2:#efd18a;--paper:#ead9b4;--ink:#392b1d}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#0b1711;color:#f5e7c8;font-family:Georgia,serif}
+body{display:flex;justify-content:center;align-items:center;padding:22px;background:radial-gradient(ellipse at center,#243b2b 0,#101d15 58%,#070d09 100%);overflow-x:hidden}
+.shell{width:min(100%,1000px);text-align:center}
+.kicker{font:11px/1.4 Georgia,serif;letter-spacing:.28em;text-transform:uppercase;color:#d0ad65;margin-bottom:18px}
+.stage{position:relative;width:min(100%,820px);height:min(70vh,560px);min-height:390px;margin:0 auto;perspective:1800px;filter:drop-shadow(0 28px 24px #0009)}
+.book{position:absolute;inset:0;display:flex;transform-style:preserve-3d;transition:transform 1.05s cubic-bezier(.2,.75,.18,1)}
+.book.open{transform:translateX(0)}
+.page{position:absolute;top:0;bottom:0;width:50%;background:var(--paper);color:var(--ink);overflow:hidden;box-shadow:inset 0 0 35px #8a653522}
+.page.left{left:0;border-radius:5px 0 0 5px;background:linear-gradient(90deg,#cdb98f 0,#f0dfba 10%,#ead9b4 100%)}
+.page.right{right:0;border-radius:0 5px 5px 0;background:linear-gradient(90deg,#e0cda7 0,#f0dfba 8%,#ead9b4 100%)}
+.page:before{content:"";position:absolute;inset:13px;border:1px solid #9b773e;pointer-events:none}
+.page:after{content:"";position:absolute;inset:19px;border:1px solid #bda16d;opacity:.55;pointer-events:none}
+.page-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;justify-content:center;padding:clamp(26px,5vw,58px);text-align:center}
+.page h2{font:600 clamp(22px,3vw,34px)/1.08 'Cormorant Garamond',Georgia,serif;margin:0 0 22px;color:#563c1f}
+.page p{font:400 clamp(15px,1.8vw,19px)/1.7 'Cormorant Garamond',Georgia,serif;margin:0}
+.ornament{color:#9b7133;font-size:22px;letter-spacing:.2em;margin:0 0 18px}
+.page-number{position:absolute;z-index:2;bottom:28px;left:0;right:0;font:12px Georgia,serif;color:#8a6a3b}
+.cover{position:absolute;inset:0 0 0 50%;width:50%;transform-origin:left center;transform-style:preserve-3d;transition:transform 1.25s cubic-bezier(.2,.7,.2,1);z-index:5;cursor:pointer}
+.cover.open{transform:rotateY(-165deg)}
+.cover-front,.cover-back{position:absolute;inset:0;backface-visibility:hidden;border-radius:0 5px 5px 0;background:linear-gradient(135deg,#213c2a,#0c2015 72%,#142c1e);border:2px solid #a87b31;box-shadow:inset 0 0 0 8px #17291d,inset 0 0 0 10px #b88a3e,inset 0 0 32px #0008;display:flex;align-items:center;justify-content:center;text-align:center;padding:clamp(22px,4vw,45px)}
+.cover-front{background-image:radial-gradient(ellipse at center,#25442f 0%,#102519 62%,#07150c 100%);background-size:cover;background-position:center}
+.cover-front:before,.cover-back:before{content:"";position:absolute;inset:18px;border:1px solid var(--gold);outline:1px solid #b9893a;outline-offset:5px;pointer-events:none}
+.cover-front:after{content:"✦  ❦  ✦";position:absolute;top:28px;left:0;right:0;color:var(--gold2);font-size:23px;letter-spacing:.35em}
+.cover-title{position:relative;z-index:1;color:#e8b34e;text-shadow:0 2px 3px #000;font:700 clamp(26px,4vw,44px)/1.1 'UnifrakturCook',Georgia,serif;max-width:95%;padding:12px}
+.cover-sub{display:block;font:italic 14px Georgia,serif;color:#f0d69b;margin-top:20px;letter-spacing:.08em}
+.cover-back{transform:rotateY(180deg);border-radius:5px 0 0 5px;background:linear-gradient(135deg,#1c3524,#09170e)}
+.cover-back .back-text{font:700 24px 'Cormorant Garamond',Georgia,serif;color:#d7a64b}
+.book.closed .page{visibility:hidden}
+.book.closed .cover{left:25%;width:50%;transform:none;border-radius:5px}
+.book.closed .cover-front{border-radius:5px}
+.book.closed .cover-back{border-radius:5px}
+.book.closed .cover.open{transform:none}
+.book.closed .page.left,.book.closed .page.right{opacity:0}
+.controls{display:flex;align-items:center;justify-content:center;gap:16px;margin:22px auto 0;flex-wrap:wrap}
+button{font:12px Georgia,serif;letter-spacing:.13em;text-transform:uppercase;color:#e8d5aa;background:transparent;border:1px solid #a47b3d;padding:11px 16px;cursor:pointer;transition:background .2s,color .2s}
+button:hover,button:focus-visible{background:#c99a43;color:#15251a;outline:none}
+button:disabled{opacity:.3;cursor:not-allowed}
+.hint{color:#bca77f;font:italic 13px Georgia,serif;margin:14px 0 0}
+.progress{height:2px;background:#3d4a3c;width:min(320px,80%);margin:17px auto 0}
+.progress span{display:block;height:100%;background:#c99a43;width:0;transition:width .3s}
+@media(max-width:600px){
+ body{padding:14px}
+ .stage{height:68vh;min-height:440px;max-height:620px}
+ .book:not(.closed) .page{width:100%;left:0;right:0;border-radius:5px}
+ .book:not(.closed) .page.left{display:none}
+ .book:not(.closed) .page.right{width:100%}
+ .book:not(.closed) .cover{left:0;width:100%}
+ .cover.open{transform:rotateY(-175deg)}
+ .book.closed .cover{left:0;width:100%}
+ .page-content{padding:36px}
+ .page h2{font-size:28px}
+ .page p{font-size:18px;line-height:1.6}
+}
+</style>
+</head>
+<body>
+<main class="shell">
+  <div class="kicker">Un libro escrito por los caminos</div>
+  <div class="stage" aria-label="Libro interactivo">
+    <div class="book closed" id="book">
+      <section class="page left" aria-hidden="true"><div class="page-content"><div class="ornament">❦</div><h2></h2><p></p></div></section>
+      <section class="page right" id="storyPage"><div class="page-content"><div class="ornament">❦ ✦ ❦</div><h2 id="pageTitle"></h2><p id="pageText"></p><div class="page-number" id="pageNumber"></div></div></section>
+      <div class="cover" id="cover" role="button" tabindex="0" aria-label="Abrir el libro">
+        <div class="cover-front"><div class="cover-title">El cuento de un encuentro inesperado<span class="cover-sub">Una historia entre tantos caminos</span></div></div>
+        <div class="cover-back"><div class="back-text">Finis initium est<br><small style="font:italic 13px Georgia;color:#d5bd87">Todo final guarda otro comienzo</small></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="prev" disabled>← Anterior</button>
+    <button id="toggle">Abrir el libro</button>
+    <button id="next" disabled>Siguiente →</button>
+  </div>
+  <div class="progress"><span id="progress"></span></div>
+  <p class="hint" id="hint">Tocá la portada para descubrir la historia.</p>
+</main>
+<script>
+const pages = [["El cuento de un encuentro inesperado", "Había una vez un viajero llamado Alan, un personaje divertido, impredecible y con esa capacidad de convertir momentos comunes en recuerdos especiales. Alguien con una forma muy suya de ver la vida y un potencial enorme, de esos que todavía tienen muchos capítulos extraordinarios por escribir."], ["Capítulos compartidos", "Un día, casi sin planearlo, su camino se cruzó con el de una chica que tenía su propio universo, y comenzaron a compartir capítulos: noches de risas, conversaciones interminables, comidas caseras y pequeños momentos que, sin hacer demasiado ruido, encontraron un lugar en la memoria."], ["La magia de coincidir", "Porque para que sea magia, solamente basta con coincidir, compartir y hacer que lo cotidiano se vuelva especial."], ["Las páginas que compartimos", "Con el tiempo, la historia tomó sus propios giros, pero eso no le quitó valor a las páginas que compartieron. Y cuando llegó el cumpleaños de Alan, ella quiso desearle algo corazón:"], ["Para vos, Alan", "Que nunca pierdas esa chispa tan tuya, que seas muy muy feliz, que tus sueños te entusiasmen y que tengas valentía para ir detrás de ellos. Que descubras todo lo que sos capaz de lograr, que lo bueno te abrace y que algún día mires hacia atrás sintiéndote orgulloso de la persona en la que te convertiste."], ["¡Feliz cumpleaños, Alan!", "Que este nuevo capítulo te acerque a todo lo que soñás y que lo mejor de tu historia todavía esté por escribirse. Te quiero mucho mucho."]];
+const book = document.getElementById('book');
+const cover = document.getElementById('cover');
+const title = document.getElementById('pageTitle');
+const text = document.getElementById('pageText');
+const number = document.getElementById('pageNumber');
+const prev = document.getElementById('prev');
+const next = document.getElementById('next');
+const toggle = document.getElementById('toggle');
+const hint = document.getElementById('hint');
+const progress = document.getElementById('progress');
+let index = -1, opened = false;
+function render(){
+  if(index < 0){title.textContent='';text.textContent='';number.textContent='';}
+  else {title.textContent=pages[index][0];text.textContent=pages[index][1];number.textContent=(index+1)+' / '+pages.length;}
+  prev.disabled=!opened || index<=0;
+  next.disabled=!opened || index>=pages.length-1;
+  toggle.textContent=!opened?'Abrir el libro':(index>=pages.length-1?'Volver a la portada':'Cerrar el libro');
+  progress.style.width=(index<0?0:((index+1)/pages.length*100))+'%';
+  hint.textContent=!opened?'Tocá la portada para descubrir la historia.':(index>=pages.length-1?'Una última página, para guardar el deseo.':'Pasá las páginas y descubrí el siguiente capítulo.');
+}
+function openBook(){if(opened)return;opened=true;book.classList.remove('closed');cover.classList.add('open');index=0;render();}
+function closeBook(){opened=false;index=-1;cover.classList.remove('open');book.classList.add('closed');render();}
+function go(delta){if(!opened)return;index=Math.max(0,Math.min(pages.length-1,index+delta));render();}
+cover.addEventListener('click',openBook);
+cover.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openBook();}});
+prev.addEventListener('click',()=>go(-1));next.addEventListener('click',()=>go(1));
+toggle.addEventListener('click',()=>{if(!opened)openBook();else if(index>=pages.length-1)closeBook();else closeBook();});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);if(e.key==='Escape'&&opened)closeBook();});
+let startX=null;
+document.getElementById('storyPage').addEventListener('touchstart',e=>{startX=e.changedTouches[0].screenX},{passive:true});
+document.getElementById('storyPage').addEventListener('touchend',e=>{if(startX===null)return;let dx=e.changedTouches[0].screenX-startX;if(Math.abs(dx)>45)go(dx<0?1:-1);startX=null},{passive:true});
+render();
+</script>
+</body>
+</html>
